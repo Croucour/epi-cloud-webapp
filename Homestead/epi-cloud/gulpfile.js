@@ -13,19 +13,41 @@ require('laravel-elixir-vue-2');
  |
  */
 
-<link href="assets/css/bootstrap.css" rel="stylesheet">
-    <!--external css-->
-<link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="assets/css/zabuto_calendar.css">
-    <link rel="stylesheet" type="text/css" href="assets/js/gritter/css/jquery.gritter.css" />
-    <link rel="stylesheet" type="text/css" href="assets/lineicons/style.css">
+// <!-- Bootstrap -->
+// <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+//     <!-- Font Awesome -->
+// <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+//     <!-- NProgress -->
+//     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+//     <!-- bootstrap-wysiwyg -->
+//     <link href="../vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
+//
+//     <!-- Custom styling plus plugins -->
+// <link href="../build/css/custom.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-<link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/style-responsive.css" rel="stylesheet">elixir(function(mix) {
+elixir(function(mix) {
 
     mix.styles([
-        'normalize.css',
-        'main.css'
+        'bootstrap.min.css',
+        'custom.min.css',
+        'font-awesome.min.css',
+        'nprogress.css',
+        'green.css',
+        'bootstrap-progressbar-3.3.4.min.css',
+        'jqvmap.min.css',
+        'prettify.min.css'
+    ]);
+});
+
+elixir(function(mix) {
+    mix.scripts([
+        'jquery.min.js',
+        'bootstrap.min.js',
+        'fastclick.js',
+        'nprogress.js',
+        'bootstrap-wysiwyg.min.js',
+        'jquery.hotkeys.js',
+        'prettify.js',
+        'custom.min.js'
     ]);
 });
