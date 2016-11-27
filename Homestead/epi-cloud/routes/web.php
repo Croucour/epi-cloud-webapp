@@ -22,4 +22,4 @@ Auth::routes();
 
 //Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/homed'));
 
-Route::get('/home', 'HomeController@index')->middleware('role:Employees');;
+Route::get('/home', 'HomeController@index')->middleware('role:Employees');
