@@ -17,4 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+// only owners will have access to routes within admin/advanced
+//Entrust::routeNeedsRole('/home', 'SysAdmin');
+
+//Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/homed'));
+
+Route::get('/home', 'HomeController@index')->middleware('role:Employees');;

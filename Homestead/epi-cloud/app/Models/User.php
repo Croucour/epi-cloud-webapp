@@ -1,12 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
+
+    protected $id;
+    protected $last_name;
+    protected $first_name;
+    protected $email;
+    protected $password;
+
+    use EntrustUserTrait;
     use Notifiable;
 
     /**
