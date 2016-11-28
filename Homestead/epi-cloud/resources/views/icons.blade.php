@@ -48,7 +48,7 @@
 
 				<p>@include('widgets.icon', array('class'=>'trash-o')) fa-trash-o
 
-				<p>@include('widgets.icon', array('class'=>'home')) fa-home
+				<p>@include('widgets.icon', array('class'=>'dashboard')) fa-home
 
 				<p>@include('widgets.icon', array('class'=>'file-o')) fa-file-o
 

@@ -11,17 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
 Auth::routes();
 
 // only owners will have access to routes within admin/advanced
 //Entrust::routeNeedsRole('/home', 'SysAdmin');
 
-//Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/homed'));
+//Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/home'));
 
-Route::get('/home', 'HomeController@index')
+Route::get('/', 'DashboardController@index')
 //    ->middleware('role:Employees')
 ;
