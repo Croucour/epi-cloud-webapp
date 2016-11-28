@@ -12,7 +12,6 @@ class User extends Authenticatable
     protected $last_name;
     protected $first_name;
     protected $email;
-    protected $password;
 
 
     use EntrustUserTrait;
