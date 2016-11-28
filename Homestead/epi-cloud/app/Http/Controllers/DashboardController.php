@@ -14,7 +14,7 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
 
     /**
@@ -27,6 +27,6 @@ class DashboardController extends Controller
         $user = User::where('last_name', '=', 'Menut')->first();
 
         var_dump($user->hasRole('SysAdmin'));
-        return view('home');
+        return view('dashboard');
     }
 }
