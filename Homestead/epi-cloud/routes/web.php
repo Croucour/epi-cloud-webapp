@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Auth::routes();
@@ -22,4 +22,6 @@ Auth::routes();
 
 //Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/homed'));
 
-Route::get('/home', 'HomeController@index')->middleware('role:Employees');
+Route::get('/home', 'HomeController@index')
+//    ->middleware('role:Employees')
+;

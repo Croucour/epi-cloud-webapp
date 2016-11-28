@@ -1,6 +1,4 @@
-const elixir = require('laravel-elixir');
-
-require('laravel-elixir-vue-2');
+var elixir = require('laravel-elixir');
 
 /*
  |--------------------------------------------------------------------------
@@ -8,46 +6,29 @@ require('laravel-elixir-vue-2');
  |--------------------------------------------------------------------------
  |
  | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Sass
- | file for your application as well as publishing vendor resources.
+ | for your Laravel application. By default, we are compiling the Less
+ | file for our application, as well as publishing vendor resources.
  |
  */
 
-// <!-- Bootstrap -->
-// <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-//     <!-- Font Awesome -->
-// <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-//     <!-- NProgress -->
-//     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-//     <!-- bootstrap-wysiwyg -->
-//     <link href="../vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-//
-//     <!-- Custom styling plus plugins -->
-// <link href="../build/css/custom.min.css" rel="stylesheet">
-
 elixir(function(mix) {
-
-    mix.styles([
-        'bootstrap.min.css',
-        'custom.min.css',
-        'font-awesome.min.css',
-        'nprogress.css',
-        'green.css',
-        'bootstrap-progressbar-3.3.4.min.css',
-        'jqvmap.min.css',
-        'prettify.min.css'
-    ]);
-});
-
-elixir(function(mix) {
+    mix.less('app.less');
+    mix.copy('bower_components/bootstrap/dist/fonts', 'public/assets/fonts');
+   	mix.copy('bower_components/font-awesome/fonts', 'public/assets/fonts');
+   	mix.styles([
+        'bower_components/bootstrap/dist/css/bootstrap.css',
+        'bower_components/fontawesome/css/font-awesome.css',
+        'resources/css/sb-admin-2.css',
+        'resources/css/timeline.css'
+    ], 'public/assets/stylesheets/styles.css', './');
     mix.scripts([
-        'jquery.min.js',
-        'bootstrap.min.js',
-        'fastclick.js',
-        'nprogress.js',
-        'bootstrap-wysiwyg.min.js',
-        'jquery.hotkeys.js',
-        'prettify.js',
-        'custom.min.js'
-    ]);
+        'bower_components/jquery/dist/jquery.js',
+        'bower_components/bootstrap/dist/js/bootstrap.js',
+        'bower_components/Chart.js/Chart.js',
+        'bower_components/metisMenu/dist/metisMenu.js',
+        'resources/js/sb-admin-2.js',
+        'resources/js/frontend.js'
+    ], 'public/assets/scripts/frontend.js', './');
 });
+
+
