@@ -21,3 +21,5 @@ Auth::routes();
 Route::get('/', 'DashboardController@index')
 //    ->middleware('role:Employees')
 ;
+
+Route::get('/vm', 'VMController@index');
