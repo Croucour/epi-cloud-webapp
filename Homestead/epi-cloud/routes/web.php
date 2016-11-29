@@ -23,11 +23,11 @@ Route::get('/', 'DashboardController@index');
 
 Route::group(['prefix' => 'vms'], function () {
     Route::get('/', 'VMController@index');
-    Route::get('/{id}', 'VMController@show');
+    Route::get('/{id}', 'VMController@show')->where('id', '[0-9]+');
     Route::get('/{id}/edit', 'VMController@edit')->name("vm.edit");
     Route::post('/{id}/update', 'VMController@update')->name("vm.update");
 
-    Route::get('/create', 'VMController@create');
+    Route::get('/create', 'VMController@create')->name("vm.create");
     Route::post('/store', 'VMController@store')->name("vm.store");
 
 

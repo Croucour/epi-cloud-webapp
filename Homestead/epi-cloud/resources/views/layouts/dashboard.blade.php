@@ -56,7 +56,7 @@
                                     <a href="{{ url ('/vms') }}">List</a>
                                 </li>
                                 <li {{ (Request::is('/vms/add') ? 'class="active"' : '') }}>
-                                    <a href="{{ url ('/vms/add') }}">Add</a>
+                                    <a href="{{ route('vm.create') }}">create new Vm</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

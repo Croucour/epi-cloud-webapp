@@ -9,6 +9,7 @@ use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\Exception;
@@ -26,15 +27,16 @@ class VMController extends Controller
      */
     public function index()
     {
-        $vms = Vm::all();
-//        $client = new Client(['http_errors' => false]);
-//        $res = $client->request(
-//            'GET', 'https://epi-cloud-vm-service.herokuapp.com/api/v1' . '/boxes', []);
-//        if ($res->getStatusCode() == 503)
-//            return view('serverout');
-//        // "200"
-//        echo $res->getHeader('content-type');
-//        echo $res->getBody();
+        $user = Auth::user();
+        if ($user->hasRole('SysAdmin')) {
+            $vms = Vm::all();
+        }
+        else if ($user->hasRole('Employees')) {
+            $vms = Vm::all()->where('user_id', "=", $user->id);
+        }
+        else {
+            $vms = Vm::all()->where('user_id', "=", $user->id);
+        }
 
         return view('vm.index')->with('vms', $vms);
     }
@@ -42,27 +44,11 @@ class VMController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
-        $client = new Client(['http_errors' => false]);
-        $res = $client->request(
-            'POST', Config::get('urls.VM_SERVER') . '/boxes', [
-            'form_params' => [
-                "os" => "ubuntu",
-                "os_version" => "trusty64",
-                "nb_core" => 1,
-                "ram" => 512,
-                "name" => "test_vm_name",
-            ]
-        ]);
-        echo $res->getStatusCode();
-        // "200"
-        echo $res->getHeader('content-type');
-        // 'application/json; charset=utf8'
-        echo $res->getBody();
-        // {"type":"User"...'
+        return view("vm.create");
     }
 
     /**
@@ -136,10 +122,9 @@ class VMController extends Controller
      * store the specified resource in storage.
      *
      * @param Request $request
-     * @param  int $id
      * @return Redirect
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $rules = array(
             'name' => 'required|max:100',
@@ -153,14 +138,12 @@ class VMController extends Controller
             $messages = $validator->messages();
 
             //TODO redirect back
-            return Redirect::to($this->prefix."/$id/edit")
-                ->withErrors($validator);
-
+            return Redirect::to($this->prefix."/create")->withErrors($validator);
         } else {
             //TODO send create request
 //            Vm::find($id)->update($request->all());
 
-            return redirect($this->prefix."/$id");
+            return redirect($this->prefix);
         }
     }
 
