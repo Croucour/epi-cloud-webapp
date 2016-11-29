@@ -102,13 +102,13 @@ class VMController extends Controller
     }
 
     /**
-     * store the specified resource in storage.
+     * update
      *
      * @param Request $request
      * @param  int $id
      * @return Redirect
      */
-    public function store(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $rules = array(
             'name'             => 'required|max:100',
@@ -125,7 +125,40 @@ class VMController extends Controller
                 ->withErrors($validator);
 
         } else {
-            Vm::find($id)->update($request->all());
+            //TODO send update request
+//            Vm::find($id)->update($request->all());
+
+            return redirect($this->prefix."/$id");
+        }
+    }
+
+    /**
+     * store the specified resource in storage.
+     *
+     * @param Request $request
+     * @param  int $id
+     * @return Redirect
+     */
+    public function store(Request $request, $id)
+    {
+        $rules = array(
+            'name' => 'required|max:100',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        // check if the validator failed -----------------------
+        if ($validator->fails()) {
+
+            $messages = $validator->messages();
+
+            //TODO redirect back
+            return Redirect::to($this->prefix."/$id/edit")
+                ->withErrors($validator);
+
+        } else {
+            //TODO send create request
+//            Vm::find($id)->update($request->all());
 
             return redirect($this->prefix."/$id");
         }
@@ -135,10 +168,18 @@ class VMController extends Controller
      * delete the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Redirect
      */
     public function delete($id)
     {
+        try {
+            $vm = Vm::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return redirect($this->prefix);
+        }
+
+        //TODO send delete request
         return redirect($this->prefix);
     }
 }

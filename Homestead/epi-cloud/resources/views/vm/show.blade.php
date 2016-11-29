@@ -30,6 +30,10 @@
                         <td>{{$vm->nb_core}}</td>
                     </tr>
                     <tr>
+                        <th>Ram</th>
+                        <td>{{$vm->ram}}</td>
+                    </tr>
+                    <tr>
                         <th>running</th>
                         <td>{{$vm->running ? "true" : "false"}}</td>
                     </tr>

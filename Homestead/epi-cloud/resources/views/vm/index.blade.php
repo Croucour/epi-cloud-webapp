@@ -16,6 +16,7 @@
                         <th>os version</th>
                         <th>Created</th>
                         <th>nb core</th>
+                        <th>Ram</th>
                         <th>running</th>
                         <th>action</th>
                     </tr>
@@ -29,6 +30,7 @@
                             <td>{{ $vm->os_version }}</td>
                             <td>{{ $vm->created_at->format('j F Y') }}</td>
                             <td>{{ $vm->nb_core }}</td>
+                            <td>{{ $vm->ram }}</td>
                             <td>{{ $vm->running ? "true" : "false" }}</td>
                             <td><a href="{{url ('/vms/'.$vm->id)}}"><button type="button" class="btn btn-primary btn-circle"><i class="fa fa-list"></i></button></a></td>
                         </tr>

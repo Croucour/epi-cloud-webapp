@@ -25,6 +25,11 @@ Route::group(['prefix' => 'vms'], function () {
     Route::get('/', 'VMController@index');
     Route::get('/{id}', 'VMController@show');
     Route::get('/{id}/edit', 'VMController@edit')->name("vm.edit");
-    Route::post('/{id}/store', 'VMController@store')->name("vm.store");
+    Route::post('/{id}/update', 'VMController@update')->name("vm.update");
+
+    Route::get('/create', 'VMController@create');
+    Route::post('/store', 'VMController@store')->name("vm.store");
+
+
     Route::get('/{id}/delete', 'VMController@delete');
 });
