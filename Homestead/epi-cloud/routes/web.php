@@ -12,11 +12,19 @@
 */
 
 Auth::routes();
-
+Route::get('/logout', function () {
+    Auth::logout();
+    Session::flush();
+    return redirect('/login');
+});
 
 Route::get('/', 'DashboardController@index');
+
 
 Route::group(['prefix' => 'vms'], function () {
     Route::get('/', 'VMController@index');
     Route::get('/{id}', 'VMController@show');
+    Route::get('/{id}/edit', 'VMController@edit')->name("vm.edit");
+    Route::post('/{id}/store', 'VMController@store')->name("vm.store");
+    Route::get('/{id}/delete', 'VMController@delete');
 });

@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vm;
 use ClassPreloader\Config;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use League\Flysystem\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VMController extends Controller
 {
+
+    private $prefix = "vms";
 
     /**
      * Display a listing of the resource.
@@ -61,17 +66,6 @@ class VMController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -93,33 +87,58 @@ class VMController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
-        //
+        try {
+            $vm = Vm::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return redirect($this->prefix);
+        }
+
+        return view("vm.edit")->with("vm", $vm);
     }
 
     /**
-     * Update the specified resource in storage.
+     * store the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param  int $id
+     * @return Redirect
      */
-    public function update(Request $request, $id)
+    public function store(Request $request, $id)
     {
-        //
+        $rules = array(
+            'name'             => 'required|max:100',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        // check if the validator failed -----------------------
+        if ($validator->fails()) {
+
+            $messages = $validator->messages();
+
+            return Redirect::to($this->prefix."/$id/edit")
+                ->withErrors($validator);
+
+        } else {
+            Vm::find($id)->update($request->all());
+
+            return redirect($this->prefix."/$id");
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * delete the specified resource in storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        return redirect($this->prefix);
     }
 }

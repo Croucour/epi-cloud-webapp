@@ -20,10 +20,11 @@ class DashboardController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        return view('dashboard');
+        $nb_vms = 1;
+        return view('dashboard')->with('nb_vms', $nb_vms);
     }
 }

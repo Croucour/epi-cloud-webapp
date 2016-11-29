@@ -11,6 +11,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th>Name</th>
                         <th>Os</th>
                         <th>os version</th>
                         <th>Created</th>
@@ -23,6 +24,7 @@
                 @foreach($vms as $key => $vm)
                         <tr>
                             <td>{{ $key+1 }}</td>
+                            <td>{{ $vm->name }}</td>
                             <td>{{ $vm->os }}</td>
                             <td>{{ $vm->os_version }}</td>
                             <td>{{ $vm->created_at->format('j F Y') }}</td>
@@ -35,7 +37,7 @@
                 </table>
             @endsection
         </div>
-        @include('widgets.panel', array('header'=>true, 'as'=>'pane2'))
+        @include('widgets.panel', array('header'=>true, "add" => array("name" =>"new Vm", "url" => url('vms/add')), 'as'=>'pane2'))
     </div>
 
     <!-- /.col-lg-4 -->
