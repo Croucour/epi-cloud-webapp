@@ -13,13 +13,10 @@
 
 Auth::routes();
 
-// only owners will have access to routes within admin/advanced
-//Entrust::routeNeedsRole('/home', 'SysAdmin');
 
-//Entrust::routeNeedsRole('home/', 'SysAdmin', Redirect::to('/home'));
+Route::get('/', 'DashboardController@index');
 
-Route::get('/', 'DashboardController@index')
-//    ->middleware('role:Employees')
-;
-
-Route::get('/vm', 'VMController@index');
+Route::group(['prefix' => 'vms'], function () {
+    Route::get('/', 'VMController@index');
+    Route::get('/{id}', 'VMController@show');
+});

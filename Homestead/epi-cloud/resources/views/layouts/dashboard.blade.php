@@ -239,11 +239,11 @@
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Vms<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#">List</a>
+                                <li {{ (Request::is('/vms') ? 'class="active"' : '') }}>
+                                    <a href="{{ url ('/vms') }}">List</a>
                                 </li>
-                                <li>
-                                    <a href="#">Add</a>
+                                <li {{ (Request::is('/vms/add') ? 'class="active"' : '') }}>
+                                    <a href="{{ url ('/vms/add') }}">Add</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vm;
 use ClassPreloader\Config;
 use Illuminate\Contracts\Encryption\EncryptException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use League\Flysystem\Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VMController extends Controller
 {
@@ -13,21 +17,21 @@ class VMController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
+        $vms = Vm::all();
+//        $client = new Client(['http_errors' => false]);
+//        $res = $client->request(
+//            'GET', 'https://epi-cloud-vm-service.herokuapp.com/api/v1' . '/boxes', []);
+//        if ($res->getStatusCode() == 503)
+//            return view('serverout');
+//        // "200"
+//        echo $res->getHeader('content-type');
+//        echo $res->getBody();
 
-        $client = new Client(['http_errors' => false]);
-        $res = $client->request(
-            'GET', 'https://epi-cloud-vm-service.herokuapp.com/api/v1' . '/boxes', []);
-        if ($res->getStatusCode() == 503)
-            return view('serverout');
-        // "200"
-        echo $res->getHeader('content-type');
-        echo $res->getBody();
-
-        return view('virtualmachines');
+        return view('vm.index')->with('vms', $vms);
     }
 
     /**
@@ -71,11 +75,18 @@ class VMController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($id)
     {
-        //
+        try {
+            $vm = Vm::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return redirect('vms');
+        }
+
+        return view('vm.show')->with('vm', $vm);
     }
 
     /**

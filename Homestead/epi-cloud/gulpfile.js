@@ -14,7 +14,7 @@ var elixir = require('laravel-elixir');
 elixir(function(mix) {
     mix.less('app.less');
     mix.copy('bower_components/bootstrap/dist/fonts', 'public/assets/fonts');
-   	mix.copy('bower_components/font-awesome/fonts', 'public/assets/fonts');
+   	mix.copy('bower_components/fontawesome/fonts', 'public/assets/fonts');
    	mix.styles([
         'bower_components/bootstrap/dist/css/bootstrap.css',
         'bower_components/fontawesome/css/font-awesome.css',
