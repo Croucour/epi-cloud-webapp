@@ -2,7 +2,11 @@
 
 @section('body')
     <div id="wrapper">
-
+        <div class="flash-message">
+                @if(Session::has('alert-danger'))
+                    <p class="alert alert-danger">{{ Session::get('alert-danger') }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+                @endif
+        </div>
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">

@@ -96,23 +96,46 @@ class VMController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $rules = array(
-            'name'             => 'required|max:100',
+            'name' => 'required|max:100',
         );
 
         $validator = Validator::make($request->all(), $rules);
 
-        // check if the validator failed -----------------------
         if ($validator->fails()) {
 
             $messages = $validator->messages();
 
-            return Redirect::to($this->prefix."/$id/edit")
+            return redirect($this->prefix."/$id/edit")
                 ->withErrors($validator);
 
         } else {
-            //TODO send update request
-//            Vm::find($id)->update($request->all());
+            $params = $request->except('_token');
+            $client = new Client(['http_errors' => false]);
+            $res = $client->request(
+                'PUT', "https://epi-cloud-vm-service.herokuapp.com/api/v1" . '/boxes/' . $id, [
+                'form_params' => $params
+            ]);
+            echo $res->getStatusCode();
+            if ($res->getStatusCode() != 200)
+            {
+                if ($res->getStatusCode() == 503){
+                    $e_msg = 'Service Unavailable';
+                }
+                elseif ($res->getStatusCode() == 404){
+                    $e_msg = 'Impossible to find this machine, it might be deleted or deplaced';
+                }
+                else{
+                    $e_msg = "ERROR : " . $res->getStatusCode();
+                }
+                $request->session()->flash('alert-danger', $e_msg);
+                return redirect($this->prefix."/$id/edit");
+            }
+            echo $res->getHeader('content-type');
+            // 'application/json; charset=utf8'
+            echo $res->getBody();
+            // {"type":"User"...'
 
             return redirect($this->prefix."/$id");
         }
@@ -137,11 +160,12 @@ class VMController extends Controller
 
             $messages = $validator->messages();
 
-            //TODO redirect back
-            return Redirect::to($this->prefix."/create")->withErrors($validator);
+            return redirect($this->prefix."/create")
+                ->withErrors($validator)
+                ->withInput();
         } else {
             //TODO send create request
-//            Vm::find($id)->update($request->all());
+            //Vm::find($id)->update($request->all());
 
             return redirect($this->prefix);
         }
