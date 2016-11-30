@@ -54,8 +54,8 @@
             @section ('pane2_panel_title', 'Direct action on vm')
             @section ('pane2_panel_body')
                 <div>
-                    <button type="button" class="btn btn-success col-lg-5">Start</button>
-                    <button type="button" class="btn btn-warning col-lg-5 col-lg-offset-2">Stop</button>
+                    <a href="{{ route('vm.start', ['id' => $vm->id]) }}"><button type="button" class="btn btn-success col-lg-5 @if($vm->running == true) disabled @endif ">Start</button></a>
+                    <a href="{{ route('vm.start', ['id' => $vm->id]) }}"><button type="button" class="btn btn-warning col-lg-5 col-lg-offset-2 @if($vm->running == false) disabled @endif ">Stop</button></a>
                 </div>
             @endsection
             @include('widgets.panel', array('header'=>true, 'as'=>'pane2'))

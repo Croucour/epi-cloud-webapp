@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Vm extends Model
 {
@@ -22,4 +23,19 @@ class Vm extends Model
     protected $port;
 
     protected $fillable = ['name', 'os', 'os_version', 'ram', 'nb_core', 'running', 'ip', 'port'];
+
+
+    public static function getByRole($role_name) {
+
+        $boxes = DB::table('boxes')
+            ->select("boxes.*")
+            ->leftJoin('users', 'users.id', '=', 'boxes.user_id')
+            ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('roles.name', "=", $role_name)
+            ->get();
+
+        return $boxes->isEmpty() ? null : Vm::hydrate($boxes->toArray());
+    }
+
 }

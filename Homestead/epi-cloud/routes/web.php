@@ -27,6 +27,9 @@ Route::group(['prefix' => 'vms'], function () {
     Route::get('/{id}/edit', 'VMController@edit')->name("vm.edit");
     Route::post('/{id}/update', 'VMController@update')->name("vm.update");
 
+    Route::post('/{id}/start', 'VMController@start')->name("vm.start");
+    Route::post('/{id}/stop', 'VMController@stop')->name("vm.stop");
+
     Route::get('/create', 'VMController@create')->name("vm.create");
     Route::post('/store', 'VMController@store')->name("vm.store");
 
