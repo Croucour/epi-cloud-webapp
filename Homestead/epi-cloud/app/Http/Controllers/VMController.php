@@ -29,23 +29,9 @@ class VMController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if ($user->hasRole('SysAdmin')) {
-            $vms = Vm::all();
-        }
-        else if ($user->hasRole('Employees')) {
-            $vms = Vm::all()->where('user_id', "=", $user->id);
+        $vms = Vm::getByRole();
 
-            $studentVms =  Vm::getByRole("Student");
-            if ($studentVms != null) {
-                $vms->merge($studentVms);
-            }
-        }
-        else {
-            $vms = Vm::all()->where('user_id', "=", $user->id);
-        }
-
-        return view('vm.index')->with('vms', $studentVms);
+        return view('vm.index')->with('vms', $vms);
     }
 
     /**

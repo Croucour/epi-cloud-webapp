@@ -33,6 +33,12 @@
                             <button type="submit" class="btn btn-primary col-sm-12">Login</button>
                         </fieldset>
                     </form>
+                    <div class="text-center" style="margin: 20px 0">
+                        <span>Or</span>
+                    </div>
+                    <div>
+                        <a href="{{ url("register") }}"><button class="btn btn-primary col-sm-12">Register</button></a>
+                    </div>
 
                 @endsection
                 @include('widgets.panel', array('as'=>'login', 'header'=>true))

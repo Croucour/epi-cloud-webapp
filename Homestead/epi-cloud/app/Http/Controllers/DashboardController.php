@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Vm;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -24,7 +25,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $nb_vms = 1;
-        return view('dashboard')->with('nb_vms', $nb_vms);
+        $vms = Vm::getByRole();
+
+        return view('dashboard')->with('nb_vms', $vms->count());
     }
 }

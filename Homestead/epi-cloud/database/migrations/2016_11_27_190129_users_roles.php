@@ -30,10 +30,12 @@ class UsersRoles extends Migration
         $user = User::where('last_name', '=', 'Walbaum')->first();
         $user->attachRole($employees);
 
-        $student = Role::where('name', '=', 'Student')->first();
+        $students = Role::where('name', '=', 'Students')->first();
 
         $user = User::where('last_name', '=', 'Beloudini')->first();
-        $user->attachRole($student);
+        $user->attachRole($students);
+
+        $student = Role::where('name', '=', 'Students')->first();
 
         $user = User::where('last_name', '=', 'Cornaz')->first();
         $user->attachRole($student);

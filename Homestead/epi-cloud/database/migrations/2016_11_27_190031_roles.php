@@ -26,6 +26,10 @@ class Roles extends Migration
             $employees->save();
 
             $student = new Role();
+            $student->name = 'Students';
+            $student->save();
+
+            $student = new Role();
             $student->name = 'Student';
             $student->save();
         }
