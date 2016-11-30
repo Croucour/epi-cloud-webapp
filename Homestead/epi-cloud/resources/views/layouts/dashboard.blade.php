@@ -71,16 +71,17 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-
+                    <div class="flash-message">
+                        @if(Session::has('alert-danger'))
+                            <br>
+                            <p class="alert alert-danger">{{ Session::get('alert-danger') }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+                        @endif
+                    </div>
                     <h1 class="page-header">@yield('page_heading')</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            <div class="flash-message">
-                @if(Session::has('alert-danger'))
-                    <p class="alert alert-danger">{{ Session::get('alert-danger') }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
-                @endif
-            </div>
+
             <div class="row">
                 @yield('section')
 
