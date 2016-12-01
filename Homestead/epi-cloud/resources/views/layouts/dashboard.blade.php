@@ -61,9 +61,11 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li {{ (Request::is('/roles') ? 'class="active"' : '') }}>
-                            <a href="{{ url ('/roles') }}"><i class="fa fa-dashboard fa-fw"></i> Roles</a>
-                        </li>
+                        @if(Entrust::hasRole('SysAdmin'))
+                            <li {{ (Request::is('/roles') ? 'class="active"' : '') }}>
+                                <a href="{{ url ('/roles') }}"><i class="fa fa-dashboard fa-fw"></i> Roles</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

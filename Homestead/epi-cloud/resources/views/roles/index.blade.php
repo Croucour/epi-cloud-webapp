@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading','List Vms')
+@section('page_heading','Roles')
 @section('section')
 
     <div class="col-sm-12">
@@ -28,7 +28,7 @@
                 </table>
             @endsection
         </div>
-        @include('widgets.panel', array('header'=>true, "add" => array("name" =>"new Vm", "url" => route('vm.create')), 'as'=>'pane2'))
+        @include('widgets.panel', array('header'=>true, 'as'=>'pane2'))
     </div>
 
     <!-- /.col-lg-4 -->
