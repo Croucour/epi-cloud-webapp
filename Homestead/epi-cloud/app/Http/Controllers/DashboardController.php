@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Vm;
+use App\Models\Boxes;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -25,7 +25,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $vms = Vm::getByRole();
+        $vms = Boxes::getByRole();
 
         return view('dashboard')->with('nb_vms', $vms->count());
     }

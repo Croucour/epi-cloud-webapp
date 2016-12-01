@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Boxes_waiting;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Vm;
+use App\Models\Boxes;
 use ClassPreloader\Config;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -29,9 +30,10 @@ class VMController extends Controller
      */
     public function index()
     {
-        $vms = Vm::getByRole();
+        $boxes = Boxes::getByRole();
+        $boxes_waiting = Boxes_waiting::getByRole();
 
-        return view('vm.index')->with('vms', $vms);
+        return view('vm.index')->with('vms', $boxes)->with("boxes_waiting", $boxes_waiting);
     }
 
     /**
@@ -53,7 +55,7 @@ class VMController extends Controller
     public function show($id)
     {
         try {
-            $vm = Vm::findOrFail($id);
+            $vm = Boxes::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return redirect('vms');
@@ -71,7 +73,7 @@ class VMController extends Controller
     public function edit($id)
     {
         try {
-            $vm = Vm::findOrFail($id);
+            $vm = Boxes::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
@@ -153,14 +155,21 @@ class VMController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         } else {
-            $response = Curl::to(getenv('URL_API_FACTORY')."/boxes")
-                ->withData($request->all())
-                ->asJson()
-                ->returnResponseObject()
-                ->post();
+            $user = Auth::user();
 
-            var_dump($response);
-            die;
+            if ($user->hasRole('Students') || $user->hasRole('Student')) {
+                $data = $request->except("_token");
+                $data["user_id"] = $user->id;
+                $data["status"] = "waiting";
+                Boxes_waiting::create($data);
+            }
+            else {
+                $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
+                    ->withData($request->except("_token"))
+                    ->asJson()
+                    ->returnResponseObject()
+                    ->post();
+            }
 
             return redirect($this->prefix);
         }
@@ -175,7 +184,7 @@ class VMController extends Controller
     public function delete($id)
     {
         try {
-            $vm = Vm::findOrFail($id);
+            $vm = Boxes::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
@@ -193,13 +202,13 @@ class VMController extends Controller
     public function start($id)
     {
         try {
-            $vm = Vm::findOrFail($id);
+            $vm = Boxes::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
         }
 
-        $response = Curl::to(getenv('URL_API_FACTORY')."/$id/start")
+        $response = Curl::to(getenv('URL_API_FACTORY')."$id/start")
             ->returnResponseObject()
             ->put();
         return redirect($this->prefix);
@@ -213,15 +222,64 @@ class VMController extends Controller
     public function stop($id)
     {
         try {
-            $vm = Vm::findOrFail($id);
+            $vm = Boxes::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
         }
 
-        $response = Curl::to(getenv('URL_API_FACTORY')."/$id/stop")
+        $response = Curl::to(getenv('URL_API_FACTORY')."$id/stop")
             ->returnResponseObject()
             ->put();
+        return redirect($this->prefix);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function waitingShow($id)
+    {
+        try {
+            $box_waiting = Boxes_waiting::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            return redirect('vms');
+        }
+
+        return view('vm.waitingShow')->with('box_waiting', $box_waiting);
+    }
+
+    /**
+     * update
+     *
+     * @param  int $id
+     * @param $status
+     * @return Redirect
+     * @internal param Request $request
+     */
+    public function statusUpdate($id, $status)
+    {
+        if ($status == "0" || $status == "1") {
+            try {
+                $box = Boxes_waiting::findOrFail($id);
+                if ($status == "0") {
+                    $box->delete();
+                }
+                else {
+//                    $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
+//                        ->withData($box->toArray())
+//                        ->asJson()
+//                        ->returnResponseObject()
+//                        ->post();
+                }
+            }
+            catch (ModelNotFoundException $e) {
+                return redirect($this->prefix);
+            }
+        }
         return redirect($this->prefix);
     }
 }

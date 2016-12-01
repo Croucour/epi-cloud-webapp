@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class Vm extends Model
+class Boxes extends Model
 {
     protected $table = 'boxes';
 
@@ -37,7 +37,7 @@ class Vm extends Model
             ->where('roles.name', "=", "Student")
             ->get();
 
-        return $boxes->isEmpty() ? null : Vm::hydrate($boxes->toArray());
+        return $boxes->isEmpty() ? null : Boxes::hydrate($boxes->toArray());
     }
 
     public static function getByRole()
@@ -46,19 +46,19 @@ class Vm extends Model
 
         $vms = null;
         if ($user->hasRole('SysAdmin')) {
-            $vms = Vm::all();
+            $vms = Boxes::all();
         }
         else if ($user->hasRole('Employees') || $user->hasRole('Students')) {
-            $vms = Vm::all()->where('user_id', "=", $user->id);
+            $vms = Boxes::all()->where('user_id', "=", $user->id);
 
-            $studentVms =  Vm::getByStudent();
+            $studentVms =  Boxes::getByStudent();
             if ($studentVms != null) {
                 $studentVms->merge($vms);
                 $vms = $studentVms;
             }
         }
         else {
-            $vms = Vm::all()->where('user_id', "=", $user->id);
+            $vms = Boxes::all()->where('user_id', "=", $user->id);
         }
 
         return $vms;

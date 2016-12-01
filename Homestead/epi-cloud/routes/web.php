@@ -33,6 +33,8 @@ Route::group(['prefix' => 'vms'], function () {
     Route::get('/create', 'VMController@create')->name("vm.create");
     Route::post('/store', 'VMController@store')->name("vm.store");
 
+    Route::get('/{id}/waiting/', 'VMController@waitingShow')->where('id', '[0-9]+');
+    Route::get('/{id}/waiting/{status}', 'VMController@statusUpdate')->where('id', '[0-9]+')->name("vm_waiting.update");
 
     Route::get('/{id}/delete', 'VMController@delete');
 });
