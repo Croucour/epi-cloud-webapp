@@ -9,15 +9,16 @@
         "laravel/framework": "5.3.*",
         "laravelcollective/html": "^5.3.0",
         "guzzlehttp/guzzle": "~6.0",
-        "ixudra/curl": "6.*"
+        "ixudra/curl": "6.*",
+        "tymon/jwt-auth": "0.5.*",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.0",
         "symfony/css-selector": "3.1.*",
-        "symfony/dom-crawler": "3.1.*",
-        "zizaco/entrust": "5.2.x-dev"
+        "symfony/dom-crawler": "3.1.*"
     },
     "autoload": {
         "classmap": [

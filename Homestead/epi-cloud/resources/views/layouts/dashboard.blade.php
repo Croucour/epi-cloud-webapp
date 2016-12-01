@@ -61,6 +61,9 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                        <li {{ (Request::is('/roles') ? 'class="active"' : '') }}>
+                            <a href="{{ url ('/roles') }}"><i class="fa fa-dashboard fa-fw"></i> Roles</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -71,10 +74,12 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="flash-message">
+                    <div class="flash-message" style="margin-top: 25px">
                         @if(Session::has('alert-danger'))
-                            <br>
                             <p class="alert alert-danger">{{ Session::get('alert-danger') }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+                        @elseif(Session::has('alert-success'))
+                            <br>
+                            <p class="alert alert-success">{{ Session::get('alert-success') }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
                         @endif
                     </div>
                     <h1 class="page-header">@yield('page_heading')</h1>

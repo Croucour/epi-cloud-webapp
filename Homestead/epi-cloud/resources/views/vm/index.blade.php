@@ -12,6 +12,7 @@
                         <thead>
                         <tr>
                             <th>#</th>
+                            <th>Creator</th>
                             <th>Name</th>
                             <th>Os</th>
                             <th>os version</th>
@@ -26,6 +27,7 @@
                         @foreach($boxes_waiting as $key => $box_waiting)
                             <tr>
                                 <td>{{ $key+1 }}</td>
+                                <td>{{ $box_waiting->user->last_name }} {{ $box_waiting->user->first_name }}</td>
                                 <td>{{ $box_waiting->name }}</td>
                                 <td>{{ $box_waiting->os }}</td>
                                 <td>{{ $box_waiting->os_version }}</td>
@@ -51,6 +53,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th>Creator</th>
                         <th>Name</th>
                         <th>Os</th>
                         <th>os version</th>
@@ -65,6 +68,7 @@
                     @foreach($vms as $key => $vm)
                         <tr>
                             <td>{{ $key+1 }}</td>
+                            <td>{{ $vm->user->last_name }} {{ $vm->user->first_name }}</td>
                             <td>{{ $vm->name }}</td>
                             <td>{{ $vm->os }}</td>
                             <td>{{ $vm->os_version }}</td>

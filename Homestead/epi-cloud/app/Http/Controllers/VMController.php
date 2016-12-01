@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Boxes;
 use ClassPreloader\Config;
+use Faker\Provider\Biased;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -17,11 +18,29 @@ use Illuminate\Support\Facades\Validator;
 use Ixudra\Curl\Facades\Curl;
 use League\Flysystem\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
 
 class VMController extends Controller
 {
 
     private $prefix = "vms";
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+    }
+
+    public function jwtToken() {
+        $user = Auth::user();
+
+        $customClaims = ['user_id' => $user->id];
+
+        $payload = JWTFactory::make($customClaims);
+
+        return JWTAuth::encode($payload);
+    }
 
     /**
      * Display a listing of the resource.
@@ -106,27 +125,21 @@ class VMController extends Controller
                 ->withErrors($validator);
 
         } else {
-//            $params = $request->except('_token');
-//            $client = new Client(['http_errors' => false]);
-//            $res = $client->request(
-//                'PUT', "https://epi-cloud-vm-service.herokuapp.com/api/v1" . '/boxes/' . $id, [
-//                'form_params' => $params
-//            ]);
-//            echo $res->getStatusCode();
-//            if ($res->getStatusCode() != 200)
-//            {
-//                if ($res->getStatusCode() == 503){
-//                    $e_msg = 'Service Unavailable';
-//                }
-//                elseif ($res->getStatusCode() == 404){
-//                    $e_msg = 'Impossible to find this machine, it might be deleted or deplaced';
-//                }
-//                else{
-//                    $e_msg = "ERROR : " . $res->getStatusCode();
-//                }
-//                $request->session()->flash('alert-danger', $e_msg);
-//                return redirect($this->prefix."/$id/edit");
-//            }
+            $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
+                ->withData($request->except("_token"))
+                ->asJson()
+//                    ->withContentType('multipart/form-data')
+                ->returnResponseObject()
+//                    ->containsFile()
+                ->withHeader("Authorization: Bearer ".$this->jwtToken())
+                ->put();
+
+            if ($response->satus != 200)
+            {
+                $message = $response->status != 200 ? $this->curlError($response->status) : "Box updated";
+                $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
+                return redirect($this->prefix."/$id/edit");
+            }
 
             return redirect($this->prefix."/$id");
         }
@@ -167,8 +180,22 @@ class VMController extends Controller
                 $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
                     ->withData($request->except("_token"))
                     ->asJson()
+//                    ->withContentType('multipart/form-data')
                     ->returnResponseObject()
+//                    ->containsFile()
+                    ->withHeader("Authorization: Bearer ".$this->jwtToken())
                     ->post();
+
+                $message = $response->status != 201 ? $this->curlError($response->status) : "Box created";
+                $request->session()->flash($response->status != 201 ? 'alert-danger' : 'alert-success', $message);
+
+                try {
+                    Boxes::findOrFail($response->content->id);
+                    return redirect($this->prefix."/".$response->content->id);
+                }
+                catch (ModelNotFoundException $e) {
+                    return redirect($this->prefix);
+                }
             }
 
             return redirect($this->prefix);
@@ -178,59 +205,82 @@ class VMController extends Controller
     /**
      * delete the specified resource in storage.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param  int $id
      * @return Redirect
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         try {
-            $vm = Boxes::findOrFail($id);
+            Boxes::findOrFail($id);
+
+
+            $response = Curl::to(getenv('URL_API_FACTORY')."boxes/".$id)
+                ->returnResponseObject()
+                ->withHeader("Authorization: Bearer ".$this->jwtToken())
+                ->delete();
+
+            $message = $response->status != 200 ? $this->curlError($response->status) : "Box deleted";
+            $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
+
+            var_dump($response);
+            die;
+
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
         }
-
-        //TODO send delete request
         return redirect($this->prefix);
     }
 
     /**
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param  int $id
      * @return Redirect
      */
-    public function start($id)
+    public function start(Request $request, $id)
     {
         try {
             $vm = Boxes::findOrFail($id);
+
+            $response = Curl::to(getenv('URL_API_FACTORY')."$id/start")
+                ->returnResponseObject()
+                ->put();
+
+            $message = $response->status != 200 ? $this->curlError($response->status) : "Box started";
+            $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
+
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
         }
 
-        $response = Curl::to(getenv('URL_API_FACTORY')."$id/start")
-            ->returnResponseObject()
-            ->put();
         return redirect($this->prefix);
     }
 
     /**
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param  int $id
      * @return Redirect
      */
-    public function stop($id)
+    public function stop(Request $request, $id)
     {
         try {
             $vm = Boxes::findOrFail($id);
+
+            $response = Curl::to(getenv('URL_API_FACTORY')."$id/stop")
+                ->returnResponseObject()
+                ->put();
+
+            $message = $response->status != 200 ? $this->curlError($response->status) : "Box stopped";
+            $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
         }
         catch (ModelNotFoundException $e) {
             return redirect($this->prefix);
         }
 
-        $response = Curl::to(getenv('URL_API_FACTORY')."$id/stop")
-            ->returnResponseObject()
-            ->put();
         return redirect($this->prefix);
     }
 
@@ -238,7 +288,7 @@ class VMController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|Redirect
      */
     public function waitingShow($id)
     {
@@ -269,11 +319,13 @@ class VMController extends Controller
                     $box->delete();
                 }
                 else {
-//                    $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
-//                        ->withData($box->toArray())
-//                        ->asJson()
-//                        ->returnResponseObject()
-//                        ->post();
+                    $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
+                        ->withData($box->toArray())
+                        ->asJson()
+                        ->returnResponseObject()
+                        ->post();
+                    $message = $response->status != 200 ? $this->curlError($response->status) : ($status == "0" ? "Box deleted" : "Box created");
+                    $this->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
                 }
             }
             catch (ModelNotFoundException $e) {
@@ -281,5 +333,22 @@ class VMController extends Controller
             }
         }
         return redirect($this->prefix);
+    }
+
+    private function curlError($status)
+    {
+        if ($status == 500) {
+            $e_msg = 'Internal error';
+        }
+        else if ($status == 503 ){
+            $e_msg = 'Service Unavailable';
+        }
+        elseif ($status == 404){
+            $e_msg = 'Impossible to find this machine, it might be deleted or deplaced';
+        }
+        else{
+            $e_msg = "ERROR : " . $status;
+        }
+        return ($e_msg);
     }
 }

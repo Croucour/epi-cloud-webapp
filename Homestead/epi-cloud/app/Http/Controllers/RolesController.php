@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Boxes_waiting;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Boxes;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class RolesController extends Controller
 {
+
+    protected $prefix = "roles/";
+
     /**
      * Create a new controller instance.
      *
@@ -26,9 +30,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $vms = Boxes::getByRole();
-        $boxes_waiting = Boxes_waiting::getByRole();
+        $users = User::all()->except(1);
+        $roles = Role::pluck('name', 'id');
 
-        return view('dashboard')->with('nb_vms', $vms->count())->with("nb_boxes_waiting", $boxes_waiting == null ? 0 : $boxes_waiting->count());
+        return view("roles.index")->with("users", $users)->with("roles", $roles);
     }
 }

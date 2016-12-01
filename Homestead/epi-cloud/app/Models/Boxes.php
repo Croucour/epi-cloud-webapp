@@ -26,6 +26,11 @@ class Boxes extends Model
     protected $fillable = ['name', 'os', 'os_version', 'ram', 'nb_core', 'running', 'ip', 'port'];
 
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public static function getByStudent()
     {
 
@@ -52,6 +57,7 @@ class Boxes extends Model
             $vms = Boxes::all()->where('user_id', "=", $user->id);
 
             $studentVms =  Boxes::getByStudent();
+
             if ($studentVms != null) {
                 $studentVms->merge($vms);
                 $vms = $studentVms;

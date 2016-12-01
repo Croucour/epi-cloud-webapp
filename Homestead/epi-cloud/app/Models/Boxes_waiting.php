@@ -26,6 +26,12 @@ class Boxes_waiting extends Model
 
     protected $fillable = ['user_id', 'name', 'os', 'os_version', 'ram', 'nb_core', 'running', 'ip', 'port', "status"];
 
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public static function getByStudent()
     {
 
@@ -49,7 +55,6 @@ class Boxes_waiting extends Model
             $vms = Boxes_waiting::all();
         }
         else if ($user->hasRole('Employees') || $user->hasRole('Students')) {
-            //TODO et recuper ses propres boxs
             $vms = Boxes_waiting::all()->where('user_id', "=", $user->id);
 
             $studentVms =  Boxes_waiting::getByStudent();
@@ -62,6 +67,6 @@ class Boxes_waiting extends Model
             $vms = Boxes_waiting::all()->where('user_id', "=", $user->id);
         }
 
-        return $vms;
+        return $vms->isEmpty() ? null : $vms;
     }
 }

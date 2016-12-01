@@ -5,6 +5,30 @@
     <!-- /.row -->
     <div class="row">
         <div class="col-lg-8">
+            @section ('pane32_panel_title', "Creator")
+            @section ('pane32_panel_body')
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <th>Last Name</th>
+                        <td>{{$vm->user->last_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>First Name</th>
+                        <td>{{$vm->user->first_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{$vm->user->email}}</td>
+                    </tr>
+                    <tr>
+                        <th>Role</th>
+                        <td>{{$vm->user->role->first()->name}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            @endsection
+            @include('widgets.panel', array('header'=>true, 'as'=>'pane32'))
             @section ('pane1_panel_title', $vm->name)
             @section ('pane1_panel_body')
                 <table class="table table-hover">

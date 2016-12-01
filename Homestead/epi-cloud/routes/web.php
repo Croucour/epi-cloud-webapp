@@ -38,3 +38,7 @@ Route::group(['prefix' => 'vms'], function () {
 
     Route::get('/{id}/delete', 'VMController@delete');
 });
+
+Route::group(['prefix' => 'roles', 'middleware' => ['role:SysAdmin']], function () {
+    Route::get('/', 'RolesController@index');
+});

@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             @section ('pane1_panel_body')
-                {!! Form::open(['route' => ['vm.store'], "class" => "form-horizontal"]) !!}
+                {!! Form::open(['route' => ['vm.store'], "class" => "form-horizontal", 'files' => true]) !!}
                 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                     {{ Form::label("Name", null, ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-10">
@@ -40,6 +40,12 @@
                     {{ Form::label("ram", null, ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-10">
                         {{Form::select('ram', ['1024' => '1024', '512' => '512'], null, ['class' => 'form-control']) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ Form::label("ssh file", null, ['class' => 'control-label col-sm-2']) }}
+                    <div class="col-sm-10">
+                        {{ Form::file("ssh", ['class' => 'form-control']) }}
                     </div>
                 </div>
 
