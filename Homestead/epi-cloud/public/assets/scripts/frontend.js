@@ -15221,6 +15221,36 @@ $(function() {
     }
 });
 
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+$(document).on('change', ".select-role", function() {
+    var uid = this.name;
+    var role = this.value;
+    var url = "/roles/update/" + uid + '/' + role;
+    $.ajax({
+        url: url,
+        type: 'POST',
+        success: function(data) {
+            console.log("SUCCESS : \nuser_id = " + uid + "\nrole = " + role);
+            console.log(data);
+            $('#success').show('slow', function () {
+                $('#success').delay(800).hide('slow');
+            });
+            $('#error').hide();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.responseText);
+            $('#error').show('slow', function () {
+                $('#error').delay(800).hide('slow').delay( 800 );
+            });
+            $('#success').hide();
+        }
+    });
+});
 
 var lineChartData = {
     labels : ["January","February","March","April","May","June","July"],
@@ -15237,7 +15267,7 @@ var lineChartData = {
         },
         {
             label: "My Second dataset",
-             fillColor: "rgba(151,187,205,0.2)",
+            fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
             pointStrokeColor: "#fff",
@@ -15247,16 +15277,16 @@ var lineChartData = {
         }
     ]
 
-}
+};
 
 
-    var cline = document.getElementById("cline").getContext("2d");
-    new Chart(cline).Line(lineChartData, {
-        responsive: true
-    });
-   
+var cline = document.getElementById("cline").getContext("2d");
+new Chart(cline).Line(lineChartData, {
+    responsive: true
+});
 
-   var pdata = [
+
+var pdata = [
     {
         value: 300,
         color:"#F7464A",
@@ -15265,7 +15295,7 @@ var lineChartData = {
     },
     {
         value: 50,
-       color: "#46BFBD",
+        color: "#46BFBD",
         highlight: "#5AD3D1",
         label: "Green"
     },
@@ -15303,31 +15333,31 @@ var cdonut = document.getElementById("cdonut").getContext("2d");
 new Chart(cdonut).Doughnut(ddata, { responsive: true});
 
 var bdata = {
-        labels : ["January","February","March","April","May","June","July"],
-        datasets : [
-            {
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
-                data : [130,160,95,205,170,135,200]
-            },
-            {
-               fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data : [85,90,160,145,180,130,195]
-            }
-        ]
+    labels : ["January","February","March","April","May","June","July"],
+    datasets : [
+        {
+            fillColor: "rgba(220,220,220,0.5)",
+            strokeColor: "rgba(220,220,220,0.8)",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data : [130,160,95,205,170,135,200]
+        },
+        {
+            fillColor: "rgba(151,187,205,0.5)",
+            strokeColor: "rgba(151,187,205,0.8)",
+            highlightFill: "rgba(151,187,205,0.75)",
+            highlightStroke: "rgba(151,187,205,1)",
+            data : [85,90,160,145,180,130,195]
+        }
+    ]
 
-    }
-    var cbar = document.getElementById("cbar").getContext("2d");
-    new Chart(cbar).Bar(bdata, {
-            responsive : true
-        });
+}
+var cbar = document.getElementById("cbar").getContext("2d");
+new Chart(cbar).Bar(bdata, {
+    responsive : true
+});
 
-    var podata = [
+var podata = [
     {
         value: 300,
         color:"#F7464A",
@@ -15359,31 +15389,31 @@ var bdata = {
         label: "Dark Grey"
     }
 
-]
+];
 
 var cpolar = document.getElementById("cpolar").getContext("2d");
 new Chart(cpolar).PolarArea(podata, { responsive: true});
 
-                var ddata1 = [
-                    {
-                        value: 50,
-                        color:"#F7464A",
-                        highlight: "#FF5A5E",
-                        label: "Red"
-                    },
-                    {
-                        value: 300,
-                        color: "#46BFBD",
-                        highlight: "#5AD3D1",
-                        label: "Green"
-                    },
-                    {
-                        value: 160,
-                        color: "#FDB45C",
-                        highlight: "#FFC870",
-                        label: "Yellow"
-                    }
-                ]
-                var cdonut1 = document.getElementById("cdonut1").getContext("2d");
-                new Chart(cdonut1).Doughnut(ddata1, { responsive: true});
+var ddata1 = [
+    {
+        value: 50,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "Red"
+    },
+    {
+        value: 300,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Green"
+    },
+    {
+        value: 160,
+        color: "#FDB45C",
+        highlight: "#FFC870",
+        label: "Yellow"
+    }
+];
+var cdonut1 = document.getElementById("cdonut1").getContext("2d");
+new Chart(cdonut1).Doughnut(ddata1, { responsive: true});
 //# sourceMappingURL=frontend.js.map

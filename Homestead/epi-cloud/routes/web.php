@@ -41,5 +41,5 @@ Route::group(['prefix' => 'vms'], function () {
 
 Route::group(['prefix' => 'roles', 'middleware' => ['role:SysAdmin', 'auth']], function () {
     Route::get('/', 'RolesController@index');
-    Route::get('/update/{user_id}/{role_id}', 'RolesController@update');
+    Route::post('/update/{user_id}/{role_id}', 'RolesController@update');
 });
