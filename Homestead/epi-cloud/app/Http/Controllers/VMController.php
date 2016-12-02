@@ -110,7 +110,6 @@ class VMController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $rules = array(
             'name' => 'required|max:100',
         );
@@ -180,14 +179,17 @@ class VMController extends Controller
                 $response = Curl::to(getenv('URL_API_FACTORY')."boxes")
                     ->withData($request->except("_token"))
                     ->asJson()
-//                    ->withContentType('multipart/form-data')
+                    ->withContentType('multipart/form-data')
                     ->returnResponseObject()
-//                    ->containsFile()
+                    ->containsFile()
                     ->withHeader("Authorization: Bearer ".$this->jwtToken())
                     ->post();
 
                 $message = $response->status != 201 ? $this->curlError($response->status) : "Box created";
                 $request->session()->flash($response->status != 201 ? 'alert-danger' : 'alert-success', $message);
+
+                var_dump($response);
+                die;
 
                 try {
                     Boxes::findOrFail($response->content->id);
@@ -220,11 +222,8 @@ class VMController extends Controller
                 ->withHeader("Authorization: Bearer ".$this->jwtToken())
                 ->delete();
 
-            $message = $response->status != 200 ? $this->curlError($response->status) : "Box deleted";
-            $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
-
-            var_dump($response);
-            die;
+            $message = $response->status != 204 ? $this->curlError($response->status) : "Box deleted";
+            $request->session()->flash($response->status != 204 ? 'alert-danger' : 'alert-success', $message);
 
         }
         catch (ModelNotFoundException $e) {
@@ -244,9 +243,12 @@ class VMController extends Controller
         try {
             $vm = Boxes::findOrFail($id);
 
-            $response = Curl::to(getenv('URL_API_FACTORY')."$id/start")
+            $response = Curl::to(getenv('URL_API_FACTORY')."boxes/$id/start")
                 ->returnResponseObject()
+                ->withHeader("Authorization: Bearer ".$this->jwtToken())
+                ->withTimeout(60)
                 ->put();
+
 
             $message = $response->status != 200 ? $this->curlError($response->status) : "Box started";
             $request->session()->flash($response->status != 200 ? 'alert-danger' : 'alert-success', $message);
@@ -270,8 +272,10 @@ class VMController extends Controller
         try {
             $vm = Boxes::findOrFail($id);
 
-            $response = Curl::to(getenv('URL_API_FACTORY')."$id/stop")
+            $response = Curl::to(getenv('URL_API_FACTORY')."/boxes/$id/stop")
                 ->returnResponseObject()
+                ->withHeader("Authorization: Bearer ".$this->jwtToken())
+                ->withTimeout(60)
                 ->put();
 
             $message = $response->status != 200 ? $this->curlError($response->status) : "Box stopped";
@@ -346,7 +350,7 @@ class VMController extends Controller
         elseif ($status == 404){
             $e_msg = 'Impossible to find this machine, it might be deleted or deplaced';
         }
-        else{
+        else if ($status != 201 && $status != 202 && $status != 203 && $status != 204){
             $e_msg = "ERROR : " . $status;
         }
         return ($e_msg);

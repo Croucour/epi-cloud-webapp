@@ -56,16 +56,18 @@ class RolesController extends Controller
             $user = User::findOrFail($user_id);
             $newRole = Role::findOrFail($role_id);
 
-            $previousRole = $user->role;
-            $response = Curl::to(getenv('URL_API_FTP').'group/' . $user->name . '/' . $previousRole . '/' . $newRole)
+            $previousRole = $user->role->first()->name;
+
+            $data = ["name" => strtolower($user->last_name), "old_group" => strtolower($previousRole), "new_group"=> strtolower($newRole->name)];
+
+            $response = Curl::to(getenv('URL_API_FTP').'user/group/')
                 ->returnResponseObject()
                 ->withHeader("Authorization: Bearer ".$this->jwtToken())
+                ->withData($data)
                 ->put();
 
             Role::detachAllRoles($user_id);
             $user->attachRole($newRole);
-
-
         }
         catch (ModelNotFoundException $e) {
             return response()->json(['response' => 500]);

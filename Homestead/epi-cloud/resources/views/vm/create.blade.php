@@ -33,7 +33,7 @@
                 <div class="form-group">
                     {{ Form::label("Nb core", null, ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-10">
-                        {{Form::select('nb_core', ['2' => '2', '4' => '4', '6' => '6'], null, ['class' => 'form-control']) }}
+                        {{Form::select('nb_core', ['1' => '1', '2' => '2', '4' => '4', '6' => '6'], null, ['class' => 'form-control']) }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -45,7 +45,7 @@
                 <div class="form-group">
                     {{ Form::label("ssh file", null, ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-10">
-                        {{ Form::file("ssh", ['class' => 'form-control']) }}
+                        {{ Form::file("ssh_key", ['class' => 'form-control']) }}
                     </div>
                 </div>
 
