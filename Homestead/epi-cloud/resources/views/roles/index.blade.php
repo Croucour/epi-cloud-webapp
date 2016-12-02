@@ -12,6 +12,14 @@
                 <div class="alert alert-danger" style="display: none;" id="error">
                     <strong>Error</strong> while applying roles
                 </div>
+                <div style="display: none;" id="loading">
+                   <div class="col-lg-1">
+                       <div class="loader"></div>
+                   </div>
+                   <div class="col-lg-11">
+                       <strong>Sending request</strong>
+                   </div>
+                </div>
                 <table class="table table-hover">
                     <thead>
                     <tr>

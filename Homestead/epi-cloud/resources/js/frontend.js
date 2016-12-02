@@ -5,6 +5,7 @@ $.ajaxSetup({
 });
 
 $(document).on('change', ".select-role", function() {
+    $('#loading').show();
     var uid = this.name;
     var role = this.value;
     var url = "/roles/update/" + uid + '/' + role;
@@ -14,6 +15,7 @@ $(document).on('change', ".select-role", function() {
         success: function(data) {
             console.log("SUCCESS : \nuser_id = " + uid + "\nrole = " + role);
             console.log(data);
+            $('#loading').hide();
             $('#success').show('slow', function () {
                 $('#success').delay(800).hide('slow');
             });
@@ -21,6 +23,7 @@ $(document).on('change', ".select-role", function() {
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log(xhr.responseText);
+            $('#loading').hide();
             $('#error').show('slow', function () {
                 $('#error').delay(800).hide('slow').delay( 800 );
             });

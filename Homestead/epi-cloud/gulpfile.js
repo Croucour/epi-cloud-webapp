@@ -19,7 +19,8 @@ elixir(function(mix) {
         'bower_components/bootstrap/dist/css/bootstrap.css',
         'bower_components/fontawesome/css/font-awesome.css',
         'resources/css/sb-admin-2.css',
-        'resources/css/timeline.css'
+        'resources/css/timeline.css',
+        'resources/css/loading.css'
     ], 'public/assets/stylesheets/styles.css', './');
     mix.scripts([
         'bower_components/jquery/dist/jquery.js',
